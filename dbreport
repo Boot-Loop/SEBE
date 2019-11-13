@@ -1,0 +1,38 @@
+Elevator Project Management Software
+
+Database (Version 1)
+This report is to discuss how the database should be implemented for this project. We
+use SQL based database for this project. And Thakee is assigned to do this part of this
+project.
+
+What should be there in the database deliverable end of first Sprint.
+---------------------------------------------------------------------
+
+
+User Management
+	The typical columns to store user details + position of the user.
+
+Supplier Management
+	The typical columns to store suppliers details.
+
+Client Management
+	The typical columns to store clients details.
+
+Project
+	Project ID (Primary)
+	Client
+	Supplier(s) – Can be one or more suppliers.
+	Date
+	Is project accepted (Bool)
+	Date of acceptance
+	Estimated time of completion
+	(Some More, I will specify on V2 of the document may be)
+
+Technical Sheet
+	Technical Sheet ID (Most of the time there will be only one technical sheet for a project, But keeping space for multiple technical sheets and revised sheets would be an added feature.)
+	Initial edit date, time
+	Last edit date, time
+	(Default columns for technical sheet, Since not properly specified by our client I will specify them in the next version of the report.)
+	Others (An added feature to add extra fields of information which are not in default technical sheet, Expected to store as JSON in SQL table.)
+
+I will add other details on another version of this report in the next sprint.

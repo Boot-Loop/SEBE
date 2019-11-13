@@ -1,2 +1,2 @@
 # SEBE
-The Back End for SkyElevator project
+The Back End of SkyElevator project

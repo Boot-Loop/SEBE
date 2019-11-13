@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# my ignore list
+_dev_docs
+media
+
 # C extensions
 *.so
 
