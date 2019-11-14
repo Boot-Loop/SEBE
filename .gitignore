@@ -4,8 +4,13 @@ __pycache__/
 *$py.class
 
 # my ignore list
-_dev_docs
+.dev
+.vscode
 media
+
+## settings will defined in pythonanywhere.com
+SEBE/settings.py
+
 
 # C extensions
 *.so

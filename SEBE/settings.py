@@ -26,7 +26,10 @@ SECRET_KEY = 'qzllhfi^f@)a&s3uoxo@fo5hc)$2$b98$x4l3_6m*dqp5bof@z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [u'SkyElevator.pythonanywhere.com']
+ALLOWED_HOSTS = [
+    'localhost',
+    u'SkyElevator.pythonanywhere.com'
+    ]
 
 
 # Application definition
@@ -38,7 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    ## own apps
+    'accounts.apps.AccountsConfig',
+
 ]
+
+INSTALLED_APPS.append('crispy_forms')
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,7 +65,10 @@ ROOT_URLCONF = 'SEBE.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, '_static/html'),
+            os.path.join(BASE_DIR, 'accounts/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,6 +76,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                ## to use {{ MEDIA_URL }} in templates
+                'django.template.context_processors.media', 
             ],
         },
     },
@@ -117,12 +133,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, '_static'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, '_static_root') ## python3 manage.py collectstatic
 
-# default static files settings for PythonAnywhere.
-# see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
-MEDIA_ROOT = u'/home/SkyElevator/SEBE/media'
+## media files will be stored as MEDIA_ROOT/[public, private]/<app_name>/<model_name>/<file_name>
+MEDIA_DIR_NAME = '_media'
 MEDIA_URL = '/media/'
-STATIC_ROOT = u'/home/SkyElevator/SEBE/static'
-STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_DIR_NAME)
+MEDIA_ROOT_PRIVATE = os.path.join(BASE_DIR, MEDIA_DIR_NAME, 'private')
+MEDIA_ROOT_PUBLIC = os.path.join(BASE_DIR, MEDIA_DIR_NAME, 'private')
