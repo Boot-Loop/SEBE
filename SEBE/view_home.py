@@ -12,3 +12,4 @@ def home(request):
             status_code=200,
             is_redirect=False, render_from='home.html'
         )
+        

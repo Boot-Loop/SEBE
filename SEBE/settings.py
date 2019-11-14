@@ -11,6 +11,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 
 ]
 
+## install with pip install django-crispy-forms
 INSTALLED_APPS.append('crispy_forms')
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

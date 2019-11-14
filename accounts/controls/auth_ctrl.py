@@ -35,5 +35,10 @@ def login(request):
                 )
 
     else:
-        messages.error(request,'Error: invalid login form')
-        return redirect('accounts-login')
+        return SEBEResponse.create_response(
+                    request, 
+                    api_data = ApiDataTemplate('Error: invalid login form', ApiDataTemplate.STATUS_ERROR).as_dict(), 
+                    status_code=400,
+                    message=messages.error(request, f'invalid login form'), 
+                    is_redirect=True, redirect_to='accounts-login'
+                )
