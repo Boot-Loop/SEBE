@@ -10,7 +10,8 @@ class SEBEResponse:
     @staticmethod
     def create_response( request, 
             api_data=dict(), status_code=200,
-            message = None, is_redirect = True, redirect_to = 'home-page', render_from='', render_ctx = dict()
+            message = None, is_redirect = True, redirect_to = 'home-page', render_from='', render_ctx = dict(),
+            same_resp = False ## user and api get same response
         ): 
 
         ## set api_resp
@@ -21,9 +22,11 @@ class SEBEResponse:
         elif request.method == 'POST':
             if request.POST.get('api') is not None:
                 api_resp = True
+
+        
         
         ## api response
-        if api_resp:
+        if api_resp and not same_resp:
             resp = JsonResponse(api_data)
             resp.status_code = status_code
             return resp

@@ -12,6 +12,7 @@ from SEBE.core.context import FormContext
 from SEBE.core.sebe_response import SEBEResponse
 from SEBE.core.apidata_template import ApiDataTemplate
 
+
 def login(request):
 
     ## redirects
@@ -33,7 +34,10 @@ def login(request):
     
     elif request.method == 'GET':
         ctx = FormContext(LoginForm(), form_template).get_context()
-        return render( request, 'post-form.html', ctx )
+        return SEBEResponse.create_response(
+                    request, same_resp=True, is_redirect=False, 
+                    render_from='post-form.html', render_ctx=ctx
+                )
 
 
 def logout(request):

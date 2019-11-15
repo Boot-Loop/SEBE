@@ -11,7 +11,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,6 +44,8 @@ INSTALLED_APPS = [
 
     ## own apps
     'accounts.apps.AccountsConfig',
+    'documents.apps.DocumentsConfig',
+    'projects.apps.ProjectsConfig',
 
 ]
 
@@ -124,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Colombo'
 
 USE_I18N = True
 
@@ -146,4 +147,4 @@ MEDIA_DIR_NAME = '_media'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_DIR_NAME)
 MEDIA_ROOT_PRIVATE = os.path.join(BASE_DIR, MEDIA_DIR_NAME, 'private')
-MEDIA_ROOT_PUBLIC = os.path.join(BASE_DIR, MEDIA_DIR_NAME, 'private')
+MEDIA_ROOT_PUBLIC = os.path.join(BASE_DIR, MEDIA_DIR_NAME, 'public')
