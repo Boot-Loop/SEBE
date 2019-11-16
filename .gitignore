@@ -6,7 +6,8 @@ __pycache__/
 # my ignore list
 .dev
 .vscode
-media
+_media
+*/migrations/
 
 ## settings will defined in pythonanywhere.com
 SEBE/settings.py
