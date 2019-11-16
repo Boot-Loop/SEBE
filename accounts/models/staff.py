@@ -25,6 +25,10 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput,
     )
 
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField()
+
 ## only for the use of admin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.auth import password_validation

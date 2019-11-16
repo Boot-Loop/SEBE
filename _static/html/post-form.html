@@ -7,6 +7,9 @@
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">{{ form_template.title }}</legend>
+            {% if form_template.safe_html_message %}
+                {{ form_template.safe_html_message | safe }}
+            {% endif %}
             {{ form | crispy }}
         </fieldset>
         <div class="form-group">
@@ -14,7 +17,8 @@
         </div>
     </form>
     
-    {% if form_template.footer is not None %}
+    <!-- footer text with link  -->
+    {% if form_template.has_footer %}
     <div class="border-top pt-3">
          <small class="text-muted">
              {{ form_template.footer.text }} <a class="ml-2" href="{{ form_template.footer.link_href }}">{{ form_template.footer.link_text }}</a>
