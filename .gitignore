@@ -13,7 +13,6 @@ SEBE/settings.py
 _static_root/
 SEBE/core/_credentials.py
 
-
 # C extensions
 *.so
 
