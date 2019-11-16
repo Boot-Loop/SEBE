@@ -20,6 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
+
+from .core import _credentials
+EMAIL_USE_TLS       = True
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_HOST_USER     = _credentials.email_host_user
+EMAIL_HOST_PASSWORD = _credentials.email_host_password
+EMAIL_PORT          = 587
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'qzllhfi^f@)a&s3uoxo@fo5hc)$2$b98$x4l3_6m*dqp5bof@z'
 
@@ -29,7 +37,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     u'SkyElevator.pythonanywhere.com'
-    ]
+]
 
 
 # Application definition

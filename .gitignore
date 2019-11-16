@@ -11,6 +11,7 @@ media
 ## settings will defined in pythonanywhere.com
 SEBE/settings.py
 _static_root/
+SEBE/core/_credentials.py
 
 
 # C extensions

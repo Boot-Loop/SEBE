@@ -6,7 +6,7 @@ from accounts.models.supplier import Supplier
 
 class Project(models.Model): ## TODO: change on_delete
     client          = models.ForeignKey(Client, on_delete=models.CASCADE)
-    suppliers       = models.ManyToManyField(Supplier, null=True, blank=True)
+    suppliers       = models.ManyToManyField(Supplier, blank=True)
     date            = models.DateTimeField()
     is_accepted     = models.BooleanField(default=False)
     accepted_date   = models.DateTimeField(null=True, blank=True)
