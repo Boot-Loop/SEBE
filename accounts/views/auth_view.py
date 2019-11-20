@@ -9,7 +9,7 @@ from ..models.staff import LoginForm, StaffCreationForm, ForgotPasswordForm
 
 from SEBE.core.form_template import SEBEFormTemplate
 from SEBE.core.context import FormContext
-from SEBE.core.sebe_response import SEBEResponse
+##from SEBE.core.sebe_response import SEBEResponse
 from SEBE.core.apidata_template import ApiDataTemplate
 
 
@@ -17,10 +17,7 @@ def login(request):
 
     ## redirects
     if request.user.is_authenticated:
-        return SEBEResponse.create_response(
-            request, is_redirect=True, redirect_to='home-page',
-            api_data = ApiDataTemplate('Login Terminated: request already authenticated', ApiDataTemplate.STATUS_INFO).as_dict()
-        )
+        return redirect('home-page')
     
     form_template = SEBEFormTemplate(
         'Log In', 'login', has_footer=True, footer_link_text='Forgot Your Password?', footer_link_href=reverse('accounts-forgot_password'),
@@ -33,43 +30,28 @@ def login(request):
     ## get
     elif request.method == 'GET':
         ctx = FormContext(LoginForm(), form_template).get_context()
-        return SEBEResponse.create_response(
-            request, same_resp=True, is_redirect=False, 
-            render_from='post-form.html', render_ctx=ctx
-        )
+        return render(request, 'post-form.html', ctx)
 
 
 def logout(request):
 
     ## redirects
     if not request.user.is_authenticated:
-        return SEBEResponse.create_response(
-            request,  is_redirect=True, redirect_to='accounts-login', status_code=406,
-            api_data = ApiDataTemplate('Logout terminated: user is not authenticated', 'info').as_dict(), 
-        )
+        return redirect('accounts-login')
 
     ## get -- no post
     if request.method == 'GET':
         conform = request.GET.get('conform')
         if conform is None:
-            return SEBEResponse.create_response(
-                request, is_redirect=False, render_from='accounts-logout.html',
-                api_data = ApiDataTemplate('Logout terminated: use ?conform=true to logout', 'info').as_dict(),
-            )
+            return render(request, 'accounts-logout.html' )
 
         elif conform == 'true':
             auth.logout(request)
-            return SEBEResponse.create_response(
-                request, api_data = ApiDataTemplate('Logout success').as_dict(),
-                message=messages.success(request, f'Logout success'), 
-                is_redirect=True, redirect_to='accounts-login'
-            )
+            messages.success(request, f'Logout success')
+            return redirect('accounts-login')
 
         else:
-            return SEBEResponse.create_response(
-                request, api_data = ApiDataTemplate('Logout terminated').as_dict(), 
-                is_redirect=True, redirect_to='home-page'
-            )
+            return redirect('home-page')
 
 def register(request):
     ## redirects -- only superuser has perm
@@ -78,10 +60,8 @@ def register(request):
         is_superuser = request.user.is_superuser
             
     if not is_superuser:
-        return SEBEResponse.create_response(
-            request, api_data = ApiDataTemplate('Error: no permission to register page', 'error').as_dict(), 
-            is_redirect=True, redirect_to='admin:login', message=messages.success(request, f'No permission to register page'), 
-        )
+        messages.success(request, f'No permission to register page')
+        return redirect('admin:login')
 
     form_template = SEBEFormTemplate('Register', 'register')
     
@@ -92,18 +72,12 @@ def register(request):
     ## get
     elif request.method == 'GET':
         ctx = FormContext(StaffCreationForm(), form_template).get_context()
-        return SEBEResponse.create_response(
-            request, same_resp=True, is_redirect=False, 
-            render_from='post-form.html', render_ctx=ctx
-        )
+        return render(request, 'post-form.html', ctx)
 
 def forgot_password(request):
     ## redirects
     if request.user.is_authenticated:
-        return SEBEResponse.create_response(
-            request, is_redirect=True, redirect_to='home-page',
-            api_data = ApiDataTemplate('forgot-password page not available: user is authenticated', 'info').as_dict()
-        )
+        return redirect('home-page')
 
     form_template = SEBEFormTemplate('Fogot Password', 'send email', 
         safe_html_message = "<p>Don't worry we'll send you a password reset link to your email." + 
@@ -117,7 +91,4 @@ def forgot_password(request):
     ## get
     elif request.method == 'GET':
         ctx = FormContext(ForgotPasswordForm(), form_template).get_context()
-        return SEBEResponse.create_response(
-            request, same_resp=True, is_redirect=False, 
-            render_from='post-form.html', render_ctx=ctx
-        )
+        return render(request, 'post-form.html', ctx)

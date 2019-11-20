@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 
-class SEBEResponse:
+## depricate
+class SEBEResponse_d:
 
     ''' message is messages instance : messages.success('success message') won't be used just to call '''
     @staticmethod

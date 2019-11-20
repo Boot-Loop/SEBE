@@ -55,6 +55,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    ## 3rd party apps
+    'crispy_forms',
+    'rest_framework',
+
     ## own apps
     'accounts.apps.AccountsConfig',
     'documents.apps.DocumentsConfig',
@@ -63,7 +67,6 @@ INSTALLED_APPS = [
 ]
 
 ## install with pip install django-crispy-forms
-INSTALLED_APPS.append('crispy_forms')
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [

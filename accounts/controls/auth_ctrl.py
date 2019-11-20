@@ -3,12 +3,13 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.models import User, auth 
 from django.contrib.auth import authenticate
+from django.shortcuts import render, redirect
 
 from ..models.staff import Staff
 from ..models.staff import LoginForm, StaffCreationForm, ForgotPasswordForm
 
 from SEBE.core.apidata_template import ApiDataTemplate
-from SEBE.core.sebe_response import SEBEResponse
+##from SEBE.core.sebe_response import SEBEResponse
 from SEBE.core.context import FormContext
 
 def login(request, form_template):
@@ -20,26 +21,17 @@ def login(request, form_template):
 
         if user is not None:
             auth.login(request, user)
-            return SEBEResponse.create_response(
-                request, api_data=ApiDataTemplate('Login success'),
-                is_redirect=True, redirect_to='home-page'
-            )
+            messages.success(request, 'Login Success!')
+            return redirect('home-page')
 
         else:
             ctx = FormContext(form, form_template).get_context()
-            return SEBEResponse.create_response(
-                request, status_code=400,
-                api_data = ApiDataTemplate('Authentication Error: user not exists', ApiDataTemplate.STATUS_ERROR).as_dict(), 
-                message=messages.error(request, f'Authentication failed. (check your username and password)'), 
-                is_redirect=False, render_from='post-form.html', render_ctx=ctx
-            )
+            messages.error(request, f'Authentication failed. (check your username and password)'), 
+            return render(request, 'post-form.html', ctx)
 
     else:
         ctx = FormContext(form, form_template).get_context()
-        return SEBEResponse.create_response(
-            request, api_data=ApiDataTemplate({'invalid form errors': form.errors}), status_code=400,
-            is_redirect=False, render_from='post-form.html', render_ctx=ctx
-        )
+        return render(request, 'post-form.html', ctx)
 
 def register(request, form_template):
     form = StaffCreationForm(request.POST)
@@ -53,18 +45,12 @@ def register(request, form_template):
         staff = Staff.objects.create(user=user, email=email)
         #auth.login(request, user)
 
-        return SEBEResponse.create_response(
-            request, api_data=ApiDataTemplate('Staff creation success'),
-            is_redirect=True, redirect_to=f'/admin/auth/user/{user.id}/change/', ## edit page TODO: change this (add permissinos auto)
-            message=messages.success(request, f'Staff creation success!'), 
-        )
+        messages.success(request, f'Staff creation success!'), 
+        return redirect( f'/admin/auth/user/{user.id}/change/' )
 
     else:
         ctx = FormContext(form, form_template).get_context()
-        return SEBEResponse.create_response(
-            request, api_data=ApiDataTemplate({'invalid form errors': form.errors}), status_code=400,
-            is_redirect=False, render_from='post-form.html', render_ctx=ctx
-        )
+        return render(request, 'post-form.html', ctx)
 
 ## temp
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -81,11 +67,8 @@ def forgot_password(request, form_template):
             user = Staff.objects.get(email=email).user
         except Staff.DoesNotExist:
             ctx = FormContext(form, form_template).get_context()
-            return SEBEResponse.create_response(
-                request, api_data=ApiDataTemplate(message="Error: the given email address does not registered", status='error'),
-                message=messages.error(request, 'The given email address does not registered'),
-                is_redirect=False, render_from='post-form.html', render_ctx=ctx
-            )
+            messages.error(request, 'The given email address does not registered'),
+            return render(request, 'post-form.html', ctx)
         '''
         token_generator = PasswordResetTokenGenerator()
         uidb64 = urlsafe_base64_encode(user.id) ## err
@@ -94,16 +77,9 @@ def forgot_password(request, form_template):
         '''
 
         ## TODO: send mail
-
-        return SEBEResponse.create_response(
-            request, api_data=ApiDataTemplate(message="A Password reset email was sent"),
-            message=messages.success(request, 'A Password reset email was sent'),
-            is_redirect=True, redirect_to='accounts-login'
-        )
+        messages.success(request, 'A Password reset email was sent'),
+        return redirect('accounts-login')
 
     else:
         ctx = FormContext(form, form_template).get_context()
-        return SEBEResponse.create_response(
-            request, api_data=ApiDataTemplate({'invalid form errors': form.errors}), status_code=400,
-            is_redirect=False, render_from='post-form.html', render_ctx=ctx
-        )
+        return render(request, 'post-form.html', ctx)

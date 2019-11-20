@@ -1,7 +1,8 @@
 from django.db import models
 from django import forms
-
 from django.contrib.auth.models import User
+
+from rest_framework import serializers
 
 ## staffs will be created by superuser
 class Staff(models.Model):
@@ -13,6 +14,14 @@ class Staff(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+## serialize ##############################
+## TODO use custom serializer
+class StaffSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Staff
+        fields = [ 'email', 'user' ]
 
 ## forms ##################################
 
