@@ -9,8 +9,6 @@ from ..models.staff import LoginForm, StaffCreationForm, ForgotPasswordForm
 
 from SEBE.core.form_template import SEBEFormTemplate
 from SEBE.core.context import FormContext
-##from SEBE.core.sebe_response import SEBEResponse
-from SEBE.core.apidata_template import ApiDataTemplate
 
 
 def login(request):

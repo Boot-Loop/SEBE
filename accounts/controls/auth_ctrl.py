@@ -8,8 +8,6 @@ from django.shortcuts import render, redirect
 from ..models.staff import Staff
 from ..models.staff import LoginForm, StaffCreationForm, ForgotPasswordForm
 
-from SEBE.core.apidata_template import ApiDataTemplate
-##from SEBE.core.sebe_response import SEBEResponse
 from SEBE.core.context import FormContext
 
 def login(request, form_template):

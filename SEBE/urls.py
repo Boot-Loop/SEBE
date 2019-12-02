@@ -21,7 +21,9 @@ urlpatterns = [
     path('', view_home.home, name='home-page'),
 
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
+    path('accounts/',  include('accounts.urls' )),
+    path('projects/',  include('projects.urls')),
+    path('documents/', include('documents.urls')),
 ]
 
 from django.conf import settings
