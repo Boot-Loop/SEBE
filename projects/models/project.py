@@ -18,10 +18,10 @@ class Project(models.Model): ## TODO: change on_delete
     ## other fields
 
     def __str__(self):
-        return 'project_'+str( self.id )
+        return 'project_' + str( self.id )
 
 ## serializers
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Project
-        fields = [ 'client', 'suppliers', 'date', 'is_accepted', 'accepted_date' ]
+        fields = [ 'id', 'client', 'suppliers', 'date', 'is_accepted', 'accepted_date' ]

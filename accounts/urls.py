@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import auth_view
 
-from .views.api_views import ClientView
+from .views.api_views import ClientView, SupplierView
 
 ## accounts/
 urlpatterns = [
@@ -12,5 +12,6 @@ urlpatterns = [
 
     ## api view
     path( 'clients/', ClientView.as_view(), name='accounts-client' ),
+    path('suppliers/', SupplierView.as_view(), name='accounts-suppliers'),
 
 ]

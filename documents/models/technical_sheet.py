@@ -25,4 +25,4 @@ class TechnicalSheet(models.Model):
 class TechnicalSheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = TechnicalSheet
-        fields = ['project']
+        fields = ['id', 'project']
