@@ -1,7 +1,15 @@
 {% extends "rest_framework/base.html" %}
 
 {% block branding %}
+<span><a href="/" class="navbar-brand">SEBE RestApi</a></span>
+{% endblock %}
 
-<span><a href="" class="navbar-brand">SEBE RestApi</a></span>
+{% block userlinks %}
+
+{% if user.is_authenticated %}
+<li><a href="{% url 'accounts-logout' %}">Log out</a></li>
+{% else %}
+<li><a href="{% url 'accounts-login' %">Log in</a></li>
+{% endif %}
 
 {% endblock %}

@@ -30,7 +30,7 @@ EMAIL_HOST_PASSWORD = _credentials.email_host_password
 EMAIL_PORT          = 587
 
 ## DEFAULT_FROM_EMAIL  = EMAIL_HOST_USER
-## EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+## EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
 ## SERVER_EMAIL        = EMAIL_HOST_USER 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -87,6 +87,8 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, '_static/html'),
             os.path.join(BASE_DIR, 'accounts/templates'),
+            os.path.join(BASE_DIR, 'documents/templates'),
+            os.path.join(BASE_DIR, 'projects/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

@@ -15,12 +15,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import view_home
+
+
+## home page ##################################
+from django.shortcuts import render, reverse
+from _sebelib import Page
+from _sebelib.sebedecor import login_required
+@login_required
+def home(request):
+    return render(request, 'pages.html', context={
+        'request':request,
+        'title'  : 'SEBE',
+        'pages':[
+            Page('accounts', reverse('accounts-home')),
+            Page('documents', reverse('documents-home')),
+            Page('projects', reverse('projects-home')),
+        ]
+    })
+##################################################
 
 urlpatterns = [
-    path('', view_home.home, name='home-page'),
-
+    
     path('admin/', admin.site.urls),
+    path('', home, name='home-page'),
+
     path('accounts/',  include('accounts.urls' )),
     path('projects/',  include('projects.urls')),
     path('documents/', include('documents.urls')),
