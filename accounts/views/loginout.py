@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate ## get user
 
 ## from django.contrib import messages
 
-
 from django import forms
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50)

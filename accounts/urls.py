@@ -1,21 +1,28 @@
 from django.urls import path, include
 from .views import loginout
+from django.http import JsonResponse
 
-from .views.clients import ClientView
-from .views.suppliers import SupplierView
+from .views.clients import ClientList, ClientDetail
+from .views.suppliers import SupplierList, SupplierDetail
+
+from .models.client import Client
+from .models.staff import Staff
+from .models.supplier import Supplier
 
 ## home page ##################################
-from django.shortcuts import render, reverse
+from django.shortcuts import reverse
 from _sebelib import Page
 from _sebelib.sebedecor import login_required
+from _sebelib.templates import pages_response, ObjectsResponse
+
 @login_required
-def home(request):
-    pages = []
-    return render(request, 'pages.html', {
-        'request': request,
-        'title'  : 'Accounts',
-        'pages'  : pages
-    })
+def home(request): 
+    pages = [
+        Page('clients', reverse('accounts-clients')),
+        Page('suppliers', reverse('accounts-suppliers')),
+    ]
+    return pages_response(request, pages, 'Accounts')
+    
 ##################################################
 
 ## accounts/
@@ -28,6 +35,11 @@ urlpatterns = [
     path('logout/', loginout.logout, name='accounts-logout'),
 
     ## api view
-    path('clients/',   ClientView.as_view(),   name='accounts-client'),
-    path('suppliers/', SupplierView.as_view(), name='accounts-suppliers'),
+    path('clients/',            ObjectsResponse('Clients', 'accounts-clients-list', 'account-client', Client),   name='accounts-clients'),
+    path('clients/list/',       ClientList.as_view(),   name='accounts-clients-list'),
+    path('clients/<int:pk>',    ClientDetail.as_view(), name='account-client'),
+
+    path('suppliers/',          ObjectsResponse('Suppliers', 'accounts-suppliers-list', 'accounts-supplyer', Supplier), name='accounts-suppliers'),
+    path('suppliers/list/',     SupplierList.as_view(), name='accounts-suppliers-list'),
+    path('suppliers/<int:pk>',  SupplierDetail.as_view(), name='accounts-supplyer'),
 ]

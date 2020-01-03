@@ -14,7 +14,7 @@ class Client(models.Model):
     def __str__(self):
         return self.first_name
 
-    
+
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Client

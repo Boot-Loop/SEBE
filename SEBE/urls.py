@@ -21,23 +21,32 @@ from django.urls import path, include
 from django.shortcuts import render, reverse
 from _sebelib import Page
 from _sebelib.sebedecor import login_required
+from _sebelib.templates import pages_response
 @login_required
 def home(request):
-    return render(request, 'pages.html', context={
-        'request':request,
-        'title'  : 'SEBE',
-        'pages':[
-            Page('accounts', reverse('accounts-home')),
-            Page('documents', reverse('documents-home')),
-            Page('projects', reverse('projects-home')),
-        ]
-    })
+    pages = [
+        Page('accounts', reverse('accounts-home')),
+        Page('documents', reverse('documents-home')),
+        Page('projects', reverse('projects')),
+    ]
+    return pages_response(request, pages, 'SEBE')
+
+from django.http import JsonResponse
+def test():
+    return JsonResponse({'message':'test'})
 ##################################################
+
+admin.site.site_header = "SEBE Admin"
+admin.site.site_title = "SEBE"
+admin.site.index_title = "wellcome to SEBE"
+
 
 urlpatterns = [
     
     path('admin/', admin.site.urls),
     path('', home, name='home-page'),
+
+    path('test/', test),
 
     path('accounts/',  include('accounts.urls' )),
     path('projects/',  include('projects.urls')),

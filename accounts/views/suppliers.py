@@ -5,19 +5,25 @@ from rest_framework import status
 
 from ..models.supplier import Supplier, SupplierSerializer
 
-class SupplierView(APIView):
+from _sebelib.sebedecor import login_required
+from _sebelib.templates import (
+    list_response_get, list_response_post,
+    detail_response, get_object
+)
 
+class SupplierList(APIView):
+
+    @login_required
     def get(self, request):
-        if not request.user.is_authenticated: return redirect('accounts-login')
+        return list_response_get(request, Supplier, SupplierSerializer)
 
-        suppliers = Supplier.objects.all()
-        serializer = SupplierSerializer(suppliers, many=True)
-        return Response(serializer.data)
-
+    @login_required
     def post(self, request):
-        serializer = SupplierSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        return list_response_post(request, SupplierSerializer)
+
+class SupplierDetail(APIView):
+
+    @login_required
+    def get(self, request, pk):
+        return detail_response(request, pk, Supplier, SupplierSerializer)
+

@@ -6,20 +6,22 @@ from rest_framework import status
 
 from ..models.project import Project, ProjectSerializer
 
-class ProjectView(APIView):
+from _sebelib.sebedecor import login_required
+from _sebelib.templates import list_response_get, detail_response, list_response_post
 
+class ProjectList(APIView):
+
+    @login_required
     def get(self, request):
-        if not request.user.is_authenticated: return redirect('accounts-login')
-
-        projects = Project.objects.all()
-        serializer = ProjectSerializer(projects, many=True)
-        return Response(serializer.data)
+        return list_response_get(request, Project, ProjectSerializer)
     
+    @login_required
     def post(self, request):
-        if not request.user.is_authenticated: return redirect('accounts-login')
+        return list_response_post(request, ProjectSerializer)
 
-        serializer = ProjectSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProjectDetail(APIView):
+
+    @login_required
+    def get(self, request, pk):
+        return detail_response(request, pk, Project, ProjectSerializer)

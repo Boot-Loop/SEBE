@@ -1,25 +1,30 @@
 from django.shortcuts import render, redirect
+from django.http import Http404
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from ..models.client import Client, ClientSerializer
 
+from _sebelib.sebedecor import login_required
+from _sebelib.templates import (
+    list_response_get, list_response_post,
+    detail_response, get_object
+)
 
-class ClientView(APIView):
+class ClientList(APIView):
 
+    @login_required
     def get(self, request):
-        if not request.user.is_authenticated: return redirect('accounts-login')
-
-        clients = Client.objects.all()
-        serializer = ClientSerializer(clients, many=True)
-        return Response(serializer.data)
+        return list_response_get(request, Client, ClientSerializer)
     
+    @login_required
     def post(self, request):
-        if not request.user.is_authenticated: return redirect('accounts-login')
+        return list_response_post(request, ClientSerializer)
 
-        serializer = ClientSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class ClientDetail(APIView):
+
+    @login_required
+    def get(self, request, pk):
+        return detail_response(request, pk, Client, ClientSerializer)
