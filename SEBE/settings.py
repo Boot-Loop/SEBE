@@ -160,9 +160,7 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, '_static_root') ## python3 manage.py collectstatic
 
-## media files will be stored as MEDIA_ROOT/[public, private]/<app_name>/<model_name>/<file_name>
+## media files will be stored as MEDIA_ROOT/<app_name>/<model_name>/<file_name>
 MEDIA_DIR_NAME = '_media'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_DIR_NAME)
-MEDIA_ROOT_PRIVATE = os.path.join(BASE_DIR, MEDIA_DIR_NAME, 'private')
-MEDIA_ROOT_PUBLIC = os.path.join(BASE_DIR, MEDIA_DIR_NAME, 'public')

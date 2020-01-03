@@ -9,6 +9,8 @@ class TechnicalSheet(models.Model):
     created = models.DateTimeField(editable=False, auto_now_add=True)
     last_modified = models.DateTimeField(editable=False, auto_now=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    
+    test_file = models.FileField(upload_to='documents/tech/', null=True, blank=True)
     ## other data
 
     ## auto save time
@@ -25,4 +27,4 @@ class TechnicalSheet(models.Model):
 class TechnicalSheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = TechnicalSheet
-        fields = ['id', 'project']
+        fields = ['id', 'project', 'test_file']

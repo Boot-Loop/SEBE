@@ -10,7 +10,7 @@ from ..models.client import Client, ClientSerializer
 from _sebelib.sebedecor import login_required
 from _sebelib.templates import (
     list_response_get, list_response_post,
-    detail_response, get_object
+    detail_response_get, get_object, detail_response_post, detail_response_delete
 )
 
 class ClientList(APIView):
@@ -27,4 +27,12 @@ class ClientDetail(APIView):
 
     @login_required
     def get(self, request, pk):
-        return detail_response(request, pk, Client, ClientSerializer)
+        return detail_response_get(request, pk, Client, ClientSerializer)
+
+    @login_required
+    def put(self, request, pk, format=None):
+        return detail_response_post(request, pk, Client, ClientSerializer)
+    
+    @login_required
+    def delete(self, request, pk, format=None):
+        return detail_response_delete(request, pk, Client)

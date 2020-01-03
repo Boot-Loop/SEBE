@@ -7,7 +7,9 @@ from rest_framework import status
 from ..models.project import Project, ProjectSerializer
 
 from _sebelib.sebedecor import login_required
-from _sebelib.templates import list_response_get, detail_response, list_response_post
+from _sebelib.templates import (
+    list_response_get, detail_response_get, list_response_post, detail_response_post, detail_response_delete
+)
 
 class ProjectList(APIView):
 
@@ -24,4 +26,13 @@ class ProjectDetail(APIView):
 
     @login_required
     def get(self, request, pk):
-        return detail_response(request, pk, Project, ProjectSerializer)
+        return detail_response_get(request, pk, Project, ProjectSerializer)
+
+    @login_required
+    def put(self, request, pk, format=None):
+        return detail_response_post(request, pk, Project, ProjectSerializer)
+    
+    @login_required
+    def delete(self, request, pk, format=None):
+        return detail_response_delete(request, pk, Client)
+    

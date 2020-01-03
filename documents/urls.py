@@ -22,6 +22,6 @@ urlpatterns = [
     path('', home, name='documents-home'),
 
     path('technical-sheets/', ObjectsResponse('Technical Sheets', 'documents-technicalsheets-list', 'documents-technicalsheet', TechnicalSheet), name='documents-technicalsheets'),
-    path('technical-sheets/list', TechnicalSheetList.as_view(), name='documents-technicalsheets-list'),
-    path('technical-sheets/<int:pk>', TechnicalSheetDetail.as_view(), name='documents-technicalsheet'),
+    path('technical-sheets/list/', TechnicalSheetList.as_view(), name='documents-technicalsheets-list'),
+    path('technical-sheet/<int:pk>/', TechnicalSheetDetail.as_view(), name='documents-technicalsheet'),
 ]

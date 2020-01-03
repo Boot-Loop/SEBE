@@ -37,9 +37,9 @@ urlpatterns = [
     ## api view
     path('clients/',            ObjectsResponse('Clients', 'accounts-clients-list', 'account-client', Client),   name='accounts-clients'),
     path('clients/list/',       ClientList.as_view(),   name='accounts-clients-list'),
-    path('clients/<int:pk>',    ClientDetail.as_view(), name='account-client'),
+    path('client/<int:pk>/',    ClientDetail.as_view(), name='account-client'),
 
     path('suppliers/',          ObjectsResponse('Suppliers', 'accounts-suppliers-list', 'accounts-supplyer', Supplier), name='accounts-suppliers'),
     path('suppliers/list/',     SupplierList.as_view(), name='accounts-suppliers-list'),
-    path('suppliers/<int:pk>',  SupplierDetail.as_view(), name='accounts-supplyer'),
+    path('supplier/<int:pk>/',  SupplierDetail.as_view(), name='accounts-supplyer'),
 ]
