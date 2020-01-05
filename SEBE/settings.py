@@ -68,6 +68,12 @@ INSTALLED_APPS = [
 
 ## install with pip install django-crispy-forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+##REST_FRAMEWORK = {
+##    'DEFAULT_AUTHENTICATION_CLASSES': (
+##        ##'rest_framework.authentication.BasicAuthentication',
+##        'rest_framework.authentication.SessionAuthentication',
+##    )
+##}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -99,7 +105,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 ## to use {{ MEDIA_URL }} in templates
-                'django.template.context_processors.media', 
+                #'django.template.context_processors.media', 
             ],
         },
     },

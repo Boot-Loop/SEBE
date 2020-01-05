@@ -1,10 +1,10 @@
 from django.urls import path
 
-from .views.projects_view import ProjectList, ProjectDetail
-from .models.project import Project
-
-
+#from .views.projects_view import ProjectList, ProjectDetail
+from _sebelib.templates import make_list_view_class, make_detail_view_class
 from _sebelib.templates import ObjectsResponse
+
+from .models.project import Project
 
 ## home page ##################################
 ## from django.shortcuts import reverse
@@ -21,6 +21,6 @@ from _sebelib.templates import ObjectsResponse
 
 urlpatterns = [
    path('', ObjectsResponse('Projects', 'projects-list', 'project', Project ), name='projects'),
-   path('list', ProjectList.as_view(), name='projects-list'),
-   path('<int:pk>/', ProjectDetail.as_view(), name='project'),
+   path('list', make_list_view_class(Project).as_view(), name='projects-list'),
+   path('<int:pk>/', make_detail_view_class(Project).as_view(), name='project'),
 ]

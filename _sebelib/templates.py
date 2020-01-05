@@ -1,11 +1,5 @@
 ## for function reuse as templates
 
-def debug():
-    while True:
-        try:
-            exec(input('>>> '))
-        except: pass
-
 import urllib.parse
 import os
 
@@ -16,8 +10,53 @@ from django.http.response import FileResponse
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.generics import UpdateAPIView
+from rest_framework import serializers
+
+from .sebedecor import login_required
 
 DEFAULT_OBJECT_COUNT = 10
+
+def make_serializer_class(Model):
+    class Serializer(serializers.ModelSerializer):
+        class Meta:
+            model  = Model
+            fields = list( map( lambda field : field.name, Model._meta.fields ) )
+    return Serializer
+
+def make_list_view_class(Model):
+    class ListView(APIView):
+        
+        @login_required
+        def get(self, request):
+            return list_response_get(request, Model, make_serializer_class(Model))
+        
+        @login_required
+        def post(self, request, format=None):
+            return list_response_post(request, make_serializer_class(Model))
+            
+    return ListView
+
+def make_detail_view_class(Model):
+    class DetailView(UpdateAPIView):
+        queryset = Model.objects.all()
+        serializer_class = make_serializer_class(Model)
+
+        @login_required
+        def get(self, request, pk):
+            return detail_response_get(request, pk, Model, self.serializer_class)
+
+        @login_required
+        def put(self, request, pk, format=None):
+            return detail_response_put(request, pk, Model, self.serializer_class)
+
+        @login_required
+        def delete(self, request, pk, format=None):
+            return detail_response_delete(request, pk, self.serializer_class)
+    return DetailView
+
+
 
 ## used in api view detail to get object
 def get_object(Model, pk):
@@ -87,7 +126,7 @@ def detail_response_get(request, pk, Model, Serializer):
     serialized = Serializer(obj)
     return Response(serialized.data)
 
-def detail_response_post(request, pk, Model, Serializer):
+def detail_response_put(request, pk, Model, Serializer):
     obj = get_object(Model, pk)
     serializer = Serializer(obj, data=request.data)
     if serializer.is_valid():

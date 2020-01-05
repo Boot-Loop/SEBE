@@ -1,3 +1,6 @@
+
+
+        
 ## page name and url for render template
 class Page:
     def __init__(self, name, url):

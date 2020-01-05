@@ -1,8 +1,9 @@
 from django.urls import path
 
-from .views.tech_sheet_view import TechnicalSheetList, TechnicalSheetDetail
-
+#from .views.tech_sheet_view import TechnicalSheetList, TechnicalSheetDetail
 from .models.technical_sheet import TechnicalSheet
+
+from _sebelib.templates import make_detail_view_class, make_list_view_class
 
 ## home page ##################################
 from django.shortcuts import reverse
@@ -20,8 +21,7 @@ def home(request):
 
 urlpatterns = [
     path('', home, name='documents-home'),
-
-    path('technical-sheets/', ObjectsResponse('Technical Sheets', 'documents-technicalsheets-list', 'documents-technicalsheet', TechnicalSheet), name='documents-technicalsheets'),
-    path('technical-sheets/list/', TechnicalSheetList.as_view(), name='documents-technicalsheets-list'),
-    path('technical-sheet/<int:pk>/', TechnicalSheetDetail.as_view(), name='documents-technicalsheet'),
+    path('technical-sheets/',           ObjectsResponse('Technical Sheets', 'documents-technicalsheets-list', 'documents-technicalsheet', TechnicalSheet),  name='documents-technicalsheets'),
+    path('technical-sheets/list/',      make_list_view_class(TechnicalSheet).as_view(),                                           name='documents-technicalsheets-list'),
+    path('technical-sheet/<int:pk>/',   make_detail_view_class(TechnicalSheet).as_view(),                                         name='documents-technicalsheet'),
 ]

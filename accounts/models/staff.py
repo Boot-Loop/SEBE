@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from rest_framework import serializers
 
 ## staffs will be created by superuser
 class Staff(models.Model):
@@ -15,6 +14,7 @@ class Staff(models.Model):
         return self.user.username
 
 
+from rest_framework import serializers
 ## serialize ##############################
 ## TODO use custom serializer
 class StaffSerializer(serializers.ModelSerializer):

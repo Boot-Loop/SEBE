@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-from rest_framework import serializers
 
 from projects.models.project import Project
 
@@ -22,9 +21,11 @@ class TechnicalSheet(models.Model):
         return super(TechnicalSheet, self).save(*args, **kwargs)
     '''
 
-
+'''
+#from rest_framework import serializers
 ## serializers
 class TechnicalSheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = TechnicalSheet
         fields = ['id', 'project', 'test_file']
+#'''

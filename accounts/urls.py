@@ -2,8 +2,9 @@ from django.urls import path, include
 from .views import loginout
 from django.http import JsonResponse
 
-from .views.clients import ClientList, ClientDetail
-from .views.suppliers import SupplierList, SupplierDetail
+from _sebelib.templates import make_detail_view_class, make_list_view_class
+#from .views.clients import ClientList, ClientDetail
+#from .views.suppliers import SupplierList, SupplierDetail
 
 from .models.client import Client
 from .models.staff import Staff
@@ -36,10 +37,10 @@ urlpatterns = [
 
     ## api view
     path('clients/',            ObjectsResponse('Clients', 'accounts-clients-list', 'account-client', Client),   name='accounts-clients'),
-    path('clients/list/',       ClientList.as_view(),   name='accounts-clients-list'),
-    path('client/<int:pk>/',    ClientDetail.as_view(), name='account-client'),
+    path('clients/list/',       make_list_view_class(Client).as_view(),   name='accounts-clients-list'),
+    path('client/<int:pk>/',    make_detail_view_class(Client).as_view(), name='account-client'),
 
     path('suppliers/',          ObjectsResponse('Suppliers', 'accounts-suppliers-list', 'accounts-supplyer', Supplier), name='accounts-suppliers'),
-    path('suppliers/list/',     SupplierList.as_view(), name='accounts-suppliers-list'),
-    path('supplier/<int:pk>/',  SupplierDetail.as_view(), name='accounts-supplyer'),
+    path('suppliers/list/',     make_list_view_class(Supplier).as_view(), name='accounts-suppliers-list'),
+    path('supplier/<int:pk>/',  make_detail_view_class(Supplier).as_view(), name='accounts-supplyer'),
 ]
