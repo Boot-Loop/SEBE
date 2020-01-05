@@ -15,12 +15,11 @@ class Staff(models.Model):
 
 
 from rest_framework import serializers
-## serialize ##############################
-## TODO use custom serializer
+'''
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Staff
         fields = [ 'email', 'user' ]
 
-## forms ##################################
+#'''
 

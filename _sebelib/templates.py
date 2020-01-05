@@ -3,6 +3,7 @@
 import urllib.parse
 import os
 
+from django.urls import path
 from django.shortcuts import render, reverse
 from django.http import JsonResponse
 from django.http.response import FileResponse
@@ -17,6 +18,59 @@ from rest_framework import serializers
 from .sebedecor import login_required
 
 DEFAULT_OBJECT_COUNT = 10
+
+from . import Page
+
+
+## TODO: move this
+def getPageUrlName(Model):
+    return '%s-%s'%( Model._meta.app_label, Model._meta.verbose_name_plural )
+
+def getListUrlName(Model):
+    return '%s-%s-list'%( Model._meta.app_label, Model._meta.verbose_name_plural )
+
+def getDetailUrlName(Model):
+    return '%s-%s'%( Model._meta.app_label, Model._meta.verbose_name)
+
+class AppHomeResponse:
+
+    def __init__(self, model_registry):
+        self.model_registry = model_registry
+
+    @login_required
+    def __call__(self, request):
+        pages = []
+        for Model in self.model_registry:
+            pages.append( Page(Model._meta.verbose_name_plural, reverse(getPageUrlName(Model))) )
+        return pages_response(request, pages, Model._meta.app_label.capitalize())
+
+
+
+## returns the url patterns for the models to be registered
+def register_models(model_registry_list):
+    urlpatterns = []
+    for Model in model_registry_list:
+        model_name_s    = Model._meta.verbose_name
+        model_name_p    = Model._meta.verbose_name_plural 
+
+        ## default url patterns
+        model_page      = '%s/'%model_name_p
+        page_url_name   = getPageUrlName(Model)
+
+        model_list      = '%s/list'%model_name_p
+        list_url_name   = getListUrlName(Model)
+
+        model_detail      = '%s/<int:pk>'%model_name_s
+        detail_url_name = getDetailUrlName(Model)
+        
+        urlpatterns += [
+            path(model_page ,  ObjectsResponse(Model),   name=page_url_name),
+            path(model_list,   make_list_view_class(Model).as_view(),   name=list_url_name),
+            path(model_detail, make_detail_view_class(Model).as_view(), name=detail_url_name),
+        ]
+    return urlpatterns
+
+
 
 def make_serializer_class(Model):
     class Serializer(serializers.ModelSerializer):
@@ -35,7 +89,7 @@ def make_list_view_class(Model):
         @login_required
         def post(self, request, format=None):
             return list_response_post(request, make_serializer_class(Model))
-            
+    ListView.__name__ = Model.__name__
     return ListView
 
 def make_detail_view_class(Model):
@@ -54,6 +108,7 @@ def make_detail_view_class(Model):
         @login_required
         def delete(self, request, pk, format=None):
             return detail_response_delete(request, pk, self.serializer_class)
+    DetailView.__name__ = Model.__name__
     return DetailView
 
 
@@ -139,13 +194,16 @@ def detail_response_delete(request, pk, Model):
     obj.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+## TODO: title -> Model.__name__
+## get other default urls from settings : get_list_ulr(Model), get_object_url(Model)
 class ObjectsResponse:
-    def __init__(self, title, list_url_name, object_url_name, Model):
-        self.title = title 
-        self.list_url_name = list_url_name
-        self.object_url_name = object_url_name
+    def __init__(self, Model):
+        self.title = Model.__name__ 
+        self.list_url_name = getListUrlName(Model)
+        self.detail_url_name = getDetailUrlName(Model)
         self.Model = Model
+    
+    @login_required
     def __call__(self, request):
         if 'HTTP_USER_AGENT' in request.META.keys():
             return render(request, 'objects.html', {
@@ -153,13 +211,13 @@ class ObjectsResponse:
                 'request'   : request,
                 'all_url'   : reverse(self.list_url_name),
                 'urls' : [
-                    reverse(self.object_url_name, kwargs={'pk':obj.pk} ) for obj in self.Model.objects.all()
+                    reverse(self.detail_url_name, kwargs={'pk':obj.pk} ) for obj in self.Model.objects.all()
                 ]
             })
         ctx = { 
             'List' :  reverse(self.list_url_name),
             'Detail' : [
-                request.scheme +'://'+ request.META.HTTP_HOST + reverse(self.object_url_name, kwargs={'pk':obj.pk} ) for obj in self.Model.objects.all()
+                request.scheme +'://'+ request.META.HTTP_HOST + reverse(self.detail_url_name, kwargs={'pk':obj.pk} ) for obj in self.Model.objects.all()
             ]
         }
         return JsonResponse(ctx)    

@@ -5,6 +5,11 @@ from django.utils import timezone
 from projects.models.project import Project
 
 class TechnicalSheet(models.Model):
+    class Meta:
+        verbose_name = 'technicalsheet'
+        verbose_name_plural = 'technicalsheets'
+        
+
     created = models.DateTimeField(editable=False, auto_now_add=True)
     last_modified = models.DateTimeField(editable=False, auto_now=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -20,12 +25,3 @@ class TechnicalSheet(models.Model):
         self.last_modified = timezone.now()
         return super(TechnicalSheet, self).save(*args, **kwargs)
     '''
-
-'''
-#from rest_framework import serializers
-## serializers
-class TechnicalSheetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TechnicalSheet
-        fields = ['id', 'project', 'test_file']
-#'''

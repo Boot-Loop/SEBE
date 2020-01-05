@@ -66,8 +66,9 @@ INSTALLED_APPS = [
 
 ]
 
+
 ## install with pip install django-crispy-forms
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+##CRISPY_TEMPLATE_PACK = 'bootstrap4'
 ##REST_FRAMEWORK = {
 ##    'DEFAULT_AUTHENTICATION_CLASSES': (
 ##        ##'rest_framework.authentication.BasicAuthentication',

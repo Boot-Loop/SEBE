@@ -6,6 +6,11 @@ from accounts.models.client import Client
 from accounts.models.supplier import Supplier
 
 class Project(models.Model): ## TODO: change on_delete
+
+    class Meta:
+        verbose_name = 'project'
+        verbose_name_plural = 'projects'
+    
     client          = models.ForeignKey(Client, on_delete=models.CASCADE)
     suppliers       = models.ManyToManyField(Supplier, blank=True)
     date            = models.DateTimeField()
@@ -18,12 +23,3 @@ class Project(models.Model): ## TODO: change on_delete
 
     def __str__(self):
         return 'project_' + str( self.id )
-
-'''
-#from rest_framework import serializers
-## serializers
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model  = Project
-        fields = [ 'id', 'client', 'suppliers', 'date', 'is_accepted', 'accepted_date' ]
-#'''

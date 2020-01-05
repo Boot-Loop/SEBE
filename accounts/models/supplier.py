@@ -3,6 +3,10 @@ from django import forms
 
 
 class Supplier(models.Model):
+    class Meta:
+        verbose_name = 'supplier'
+        verbose_name_plural = 'suppliers'
+
     company_name = models.CharField(max_length=50)
     email        = models.EmailField()
     address      = models.CharField(max_length=100)
@@ -11,14 +15,3 @@ class Supplier(models.Model):
 
     def __str__(self):
         return self.company_name
-
-
-'''
-#from rest_framework import serializers
-## serializers
-class SupplierSerializer(serializers.ModelSerializer):
-    class Meta:
-        model  = Supplier
-        fields = [ 'id', 'company_name', 'email', 'address' ]
-
-#'''   

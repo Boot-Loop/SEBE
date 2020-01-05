@@ -16,6 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+## must match the app name and must have urls.py
+HOME_PAGE_APPS_REGISTRY = [
+    'accounts',
+    'documents',
+    'projects',
+]
 
 ## home page ##################################
 from django.shortcuts import render, reverse
@@ -24,11 +30,9 @@ from _sebelib.sebedecor import login_required
 from _sebelib.templates import pages_response
 @login_required
 def home(request):
-    pages = [
-        Page('accounts', reverse('accounts-home')),
-        Page('documents', reverse('documents-home')),
-        Page('projects', reverse('projects')),
-    ]
+    pages = []
+    for app_name in HOME_PAGE_APPS_REGISTRY:
+        pages.append(Page(app_name, reverse('%s-home'%app_name)))
     return pages_response(request, pages, 'SEBE')
 
 from django.http import JsonResponse
@@ -40,20 +44,13 @@ admin.site.site_header = "SEBE Admin"
 admin.site.site_title = "SEBE"
 admin.site.index_title = "wellcome to SEBE"
 
-
 urlpatterns = [
     
     path('admin/', admin.site.urls),
     path('', home, name='home-page'),
-
-    path('test/', test),
-
-    path('accounts/',  include('accounts.urls' )),
-    path('projects/',  include('projects.urls')),
-    path('documents/', include('documents.urls')),
+    path('test/', test), ## for testing
 ]
+## register apps urls
+for app_name in HOME_PAGE_APPS_REGISTRY:
+    urlpatterns.append(path( '%s/'%app_name, include('%s.urls'%app_name) ))
 
-from django.conf import settings
-from django.conf.urls.static import static
-
-## urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) ## private
