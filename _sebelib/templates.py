@@ -12,16 +12,14 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView, ListCreateAPIView
 from rest_framework import serializers
 
 from .sebedecor import login_required
 
 DEFAULT_OBJECT_COUNT = 10
 
-from . import Page
-
-
+from . import PageCtx
 ## TODO: move this
 def getPageUrlName(Model):
     return '%s-%s'%( Model._meta.app_label, Model._meta.verbose_name_plural )
@@ -41,7 +39,7 @@ class AppHomeResponse:
     def __call__(self, request):
         pages = []
         for Model in self.model_registry:
-            pages.append( Page(Model._meta.verbose_name_plural, reverse(getPageUrlName(Model))) )
+            pages.append( PageCtx(Model._meta.verbose_name_plural, reverse(getPageUrlName(Model))) )
         return pages_response(request, pages, Model._meta.app_label.capitalize())
 
 
@@ -57,10 +55,10 @@ def register_models(model_registry_list):
         model_page      = '%s/'%model_name_p
         page_url_name   = getPageUrlName(Model)
 
-        model_list      = '%s/list'%model_name_p
+        model_list      = '%s/list/'%model_name_p
         list_url_name   = getListUrlName(Model)
 
-        model_detail      = '%s/<int:pk>'%model_name_s
+        model_detail    = '%s/<int:pk>/'%model_name_s
         detail_url_name = getDetailUrlName(Model)
         
         urlpatterns += [
@@ -71,17 +69,34 @@ def register_models(model_registry_list):
     return urlpatterns
 
 
-
+from django.db import models
+REVRESE_M2M = models.fields.related_descriptors.ReverseManyToOneDescriptor
+REVERSE_O2O = models.fields.related_descriptors.ReverseOneToOneDescriptor
 def make_serializer_class(Model):
+            
+
     class Serializer(serializers.ModelSerializer):
         class Meta:
             model  = Model
-            fields = list( map( lambda field : field.name, Model._meta.fields ) )
+            fields = '__all__'
+            # equal to __all__ -> fields = list( map( lambda field : field.name, Model._meta.fields ) ) +  list(map(lambda field : field.name, Model._meta.many_to_many))
+    
+    ##for attr_name in dir(Model):
+    ##    attr = getattr(Model, attr_name)
+    ##    if type(attr) == REVRESE_M2M:
+    ##        ## to make change of relations replace read_only with queryset
+    ##        ## RelatedModel = attr.rel.related_model ## queryset=RelatedModel.objects.all()
+    ##        setattr(Serializer, attr_name, serializers.HyperlinkedRelatedField(many=True, view_name='accounts-home', read_only=True))
+    ##        Serializer.Meta.fields.append(attr_name)
+            
+    
     return Serializer
 
 def make_list_view_class(Model):
-    class ListView(APIView):
-        
+    class ListView(ListCreateAPIView):
+        queryset = Model.objects.all()
+        serializer_class = make_serializer_class(Model)
+
         @login_required
         def get(self, request):
             return list_response_get(request, Model, make_serializer_class(Model))
@@ -107,7 +122,7 @@ def make_detail_view_class(Model):
 
         @login_required
         def delete(self, request, pk, format=None):
-            return detail_response_delete(request, pk, self.serializer_class)
+            return detail_response_delete(request, pk, Model)
     DetailView.__name__ = Model.__name__
     return DetailView
 
@@ -137,6 +152,21 @@ def list_response_get(request, Model, Serializer):
         count  = DEFAULT_OBJECT_COUNT
 
     objects = Model.objects.all()
+
+    ## TODO: create a method for this
+    query_dict = dict()
+    for q in request.GET:
+        query_dict[q] = request.GET.get(q)
+    try:
+        ## clear unwanted query
+        for attr in query_dict:
+            if query_dict[attr] == 'false' : query_dict[attr] = 'False'
+            if query_dict[attr] == 'True' : query_dict[attr] = 'True'
+            if not hasattr(Model, attr): del query_dict[attr]
+        objects = objects.filter( **query_dict )
+    except:
+        objects = Model.objects.none()
+    
 
     ## TODO: handle error maybe an error response
     if orderby :

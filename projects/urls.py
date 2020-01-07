@@ -8,8 +8,9 @@ from .models.project import Project
 API_MODELS_REGITRY = [
     Project
 ]
+APP_NAME = 'projects'
 
 ## projects/
 urlpatterns = [
-   path('', AppHomeResponse(API_MODELS_REGITRY), name='projects-home'),
+   path('', AppHomeResponse(API_MODELS_REGITRY), name='%s-home'%APP_NAME),
 ] + register_models(API_MODELS_REGITRY)

@@ -11,11 +11,12 @@ from .models.supplier import Supplier
 API_MODELS_REGITRY = [
     Client, Supplier
 ]
+APP_NAME = 'accounts'
 
 ## accounts/
 urlpatterns = [
     ## home
-    path('', AppHomeResponse(API_MODELS_REGITRY), name='accounts-home'),
+    path('', AppHomeResponse(API_MODELS_REGITRY), name='%s-home'%APP_NAME),
 
     ## auth
     path('login/',  loginout.login,  name='accounts-login'),

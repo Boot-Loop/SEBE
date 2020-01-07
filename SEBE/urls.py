@@ -25,14 +25,14 @@ HOME_PAGE_APPS_REGISTRY = [
 
 ## home page ##################################
 from django.shortcuts import render, reverse
-from _sebelib import Page
+from _sebelib import PageCtx
 from _sebelib.sebedecor import login_required
 from _sebelib.templates import pages_response
 @login_required
 def home(request):
     pages = []
     for app_name in HOME_PAGE_APPS_REGISTRY:
-        pages.append(Page(app_name, reverse('%s-home'%app_name)))
+        pages.append(PageCtx(app_name, reverse('%s-home'%app_name)))
     return pages_response(request, pages, 'SEBE')
 
 from django.http import JsonResponse
@@ -45,11 +45,11 @@ admin.site.site_title = "SEBE"
 admin.site.index_title = "wellcome to SEBE"
 
 urlpatterns = [
-    
-    path('admin/', admin.site.urls),
-    path('', home, name='home-page'),
-    path('test/', test), ## for testing
+    path('admin/',  admin.site.urls),
+    path('',        home, name='home-page'),
+    path('test/',   test), ## for testing
 ]
+
 ## register apps urls
 for app_name in HOME_PAGE_APPS_REGISTRY:
     urlpatterns.append(path( '%s/'%app_name, include('%s.urls'%app_name) ))
