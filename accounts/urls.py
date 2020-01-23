@@ -1,5 +1,7 @@
 from django.urls import path
-from _sebelib.templates import register_models, AppHomeResponse
+from drfvg import register_models
+
+## view functions
 from .views import loginout
 
 ## models to register
@@ -7,20 +9,10 @@ from .models.client import Client
 from .models.staff import Staff
 from .models.supplier import Supplier
 
-## register models
-API_MODELS_REGITRY = [
-    Client, Supplier
-]
-APP_NAME = 'accounts'
-
 ## accounts/
 urlpatterns = [
-    ## home
-    path('', AppHomeResponse(API_MODELS_REGITRY), name='%s-home'%APP_NAME),
 
-    ## auth
     path('login/',  loginout.login,  name='accounts-login'),
     path('logout/', loginout.logout, name='accounts-logout'),
 
-] + register_models(API_MODELS_REGITRY)
-
+] + register_models( [ Client, Supplier ], app_name='accounts') 
