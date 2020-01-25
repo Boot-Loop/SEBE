@@ -23,18 +23,7 @@ HOME_PAGE_APPS_REGISTRY = [
     'projects',
 ]
 
-## home page ##################################
-from django.shortcuts import render, reverse
-from _sebelib import PageCtx
-from _sebelib.sebedecor import login_required
-from _sebelib.templates import pages_response
-@login_required
-def home(request):
-    pages = []
-    for app_name in HOME_PAGE_APPS_REGISTRY:
-        pages.append(PageCtx(app_name, reverse('%s-home'%app_name)))
-    return pages_response(request, pages, 'SEBE')
-
+## for testing ##################################
 from django.http import JsonResponse
 def test():
     return JsonResponse({'message':'test'})
@@ -44,13 +33,9 @@ admin.site.site_header = "SEBE Admin"
 admin.site.site_title = "SEBE"
 admin.site.index_title = "wellcome to SEBE"
 
+from drfvg import register_apps
+
 urlpatterns = [
     path('admin/',  admin.site.urls),
-    path('',        home, name='home-page'),
     path('test/',   test), ## for testing
-]
-
-## register apps urls
-for app_name in HOME_PAGE_APPS_REGISTRY:
-    urlpatterns.append(path( '%s/'%app_name, include('%s.urls'%app_name) ))
-
+] + register_apps( HOME_PAGE_APPS_REGISTRY, api_name='SEBE' )
