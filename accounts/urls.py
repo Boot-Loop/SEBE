@@ -3,7 +3,7 @@ from drfvg import register_models
 
 ## models to register
 from .models.client import Client
-from .models.staff import Staff
+#from .models.staff import Staff
 from .models.supplier import Supplier
 
 ## accounts/

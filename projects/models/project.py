@@ -5,21 +5,26 @@ from django.utils import timezone
 from accounts.models.client import Client
 from accounts.models.supplier import Supplier
 
+PROJECT_TYPES = [
+    (1, 'INSTALLATION'),
+    (2, 'MAINTENANCE'),
+    (3, 'REPAIR_OR_MODERNIZATION'),
+    (4, 'OTHERS'),
+]
+
 class Project(models.Model): ## TODO: change on_delete
+    id              = models.IntegerField(primary_key=True)
+    name            = models.CharField(max_length=40)
+    client          = models.ForeignKey(Client, on_delete=models.CASCADE)
+    suppliers       = models.ManyToManyField(Supplier,      blank=True)
+    location        = models.CharField(max_length=40,       null=True, blank=True)
+    date            = models.DateTimeField(                 null=True, blank=True)
+    creation_date   = models.DateTimeField(                 null=True, blank=True)
+    project_type    = models.IntegerField(choices=PROJECT_TYPES)
 
     class Meta:
         verbose_name = 'project'
         verbose_name_plural = 'projects'
-    
-    client          = models.ForeignKey(Client, on_delete=models.CASCADE)
-    suppliers       = models.ManyToManyField(Supplier, blank=True)
-    date            = models.DateTimeField()
-    is_accepted     = models.BooleanField(default=False)
-    accepted_date   = models.DateTimeField(null=True, blank=True)
-    ## estimated time what type?
-    ''' Technical Sheet is has project as foreign key (for one to many relation) '''
-
-    ## other fields
 
     def __str__(self):
-        return 'project_' + str( self.id )
+        return self.name

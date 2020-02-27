@@ -1,3 +1,4 @@
+'''
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -13,13 +14,6 @@ class Staff(models.Model):
     def __str__(self):
         return self.user.username
 
-
-from rest_framework import serializers
-'''
-class StaffSerializer(serializers.ModelSerializer):
-    class Meta:
-        model  = Staff
-        fields = [ 'email', 'user' ]
 
 #'''
 

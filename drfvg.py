@@ -25,7 +25,7 @@ from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 from django.urls import path, include
 from django.shortcuts import render, reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.http.response import FileResponse
 from django.db import models
 from django.db.models.fields.files import File
@@ -55,7 +55,10 @@ def login_required(handler):
         if request.user.is_authenticated:
             return handler(*args, **kwargs)
         else :
-            return redirect(reverse(LOGIN_PATH_NAME))
+            if 'HTTP_USER_AGENT' in request.META.keys():
+                return redirect(reverse(LOGIN_PATH_NAME))
+            else:
+                return HttpResponse('Error: login required',status=307)
     return wrapper
 
 def register_apps(app_registry, api_name='DRFVG'):
@@ -302,7 +305,7 @@ def generate_ulr_page_response(request, urlctx, page_title):
 ## context object to render url page
 class UrlRenderCtx:
     def __init__(self, name, url):
-        self.name = "%-10s"%name; self.url = url
+        self.name = "%-20s"%name; self.url = url
 
 class AppHomeResponse:
     ## model_registry is a list of django.db.models 
